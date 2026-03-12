@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>酸液幻觉 · 高级酸性风格海报提示词生成器 - 古月AI智能体</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft YaHei",sans-serif;}
+body{
+  background: linear-gradient(135deg,#ff00ff,#00ffff,#ff9900,#8a2be2);
+  background-size: 400% 400%;
+  animation: gradientBG 30s ease infinite;
+  min-height:100vh;
+  color:#fff;
+  padding:60px;
+}
+@keyframes gradientBG{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.container{max-width:1200px;margin:auto;}
+h1{text-align:center;font-size:34px;margin-bottom:40px;font-weight:700;text-shadow:2px 2px 8px rgba(0,0,0,0.5);}
+.card{
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(18px);
+  padding:30px;
+  border-radius:24px;
+  border: 2px solid;
+  border-image: linear-gradient(135deg,#ff00ff,#00ffff,#ff9900,#8a2be2) 1;
+  box-shadow:0 12px 28px rgba(0,0,0,0.5);
+  margin-bottom:30px;
+}
+label{font-size:14px;opacity:0.9;color:#fff;}
+input{
+  width:100%;
+  padding:14px;
+  margin-top:8px;
+  margin-bottom:18px;
+  background:rgba(0,0,0,0.35);
+  border:1px solid #ff00ff;
+  border-radius:12px;
+  color:white;
+  font-size:16px;
+}
+button{
+  padding:14px 20px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:600;
+  background: linear-gradient(135deg,#ff00ff,#00ffff,#ff9900,#8a2be2);
+  color:#000;
+  box-shadow:0 5px 15px rgba(0,0,0,0.5);
+  transition:0.3s;
+}
+button:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,0.6);}
+.generate{width:100%;margin-top:10px;}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+.promptCard{
+  background:rgba(0,0,0,0.65);
+  border-radius:20px;
+  border-left:5px solid #ff00ff;
+  border-top:5px solid #00ffff;
+  padding:24px;
+  line-height:1.7;
+  position:relative;
+  box-shadow:0 10px 22px rgba(0,0,0,0.55);
+}
+.promptTitle{font-size:18px;font-weight:700;margin-bottom:10px;color:#ff9900;text-shadow:1px 1px 2px #000;}
+.promptText{white-space:pre-wrap;font-size:14px;opacity:0.95;color:#fff;}
+.copyBtn{
+  margin-top:16px;
+  background:linear-gradient(135deg,#ff00ff,#00ffff,#ff9900,#8a2be2);
+  padding:10px 18px;
+  border-radius:10px;
+  color:#000;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+}
+.copyBtn.copied{background:rgba(100,100,100,0.8);color:#fff;transform:scale(1.05);}
+.copyBtn:hover{transform:translateY(-2px);}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>酸液幻觉 · 高级酸性风格海报提示词生成器 - 古月AI智能体</h1>
+
+<div class="card">
+<label>海报主题 / 产品名称</label>
+<input id="title" placeholder="例如：ACID派对夜">
+<label>海报副标题</label>
+<input id="subtitle" placeholder="例如：迷幻电子盛宴">
+<label>海报类型</label>
+<input id="type" placeholder="例如：电子音乐 / 青年文化 / 数字艺术">
+<button class="generate" onclick="generate()">生成20组提示词</button>
+</div>
+
+<div id="results" class="results"></div>
+</div>
+
+<script>
+function rand(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+let assistTexts=[
+  "ACID","PSY","TECHNO","限时派对","迷幻夜","全息体验","电子节奏","Y2K复古","金属流动","数字艺术"
+];
+
+let visualElements=[
+  "液态金属字体","流动水银效果","全息镭射贴纸","扭曲波浪网格","赛博格电子元素","复古未来符号","迷幻旋涡纹理","RGB分离故障","荧光冲击图案","抽象有机晶体"
+];
+
+let layoutStyles=[
+  "主标题液态金属流动，副标题全息悬浮，辅助文字溶解点缀",
+  "主标题扭曲拉伸，副标题金属铭牌，辅助文字嵌入波纹网格",
+  "主标题液态滴落，副标题镭射渐变，辅助文字从溶解边缘延展",
+  "主标题溶解效果，副标题全息标签，辅助文字交错叠压",
+  "主标题鱼眼畸变，副标题扭曲小字，辅助文字镭射闪烁",
+  "主标题金属反光，副标题光栅变色，辅助文字悬浮溶解",
+  "主标题波浪扭曲，副标题全息铭牌，辅助文字嵌入RGB干扰",
+  "主标题熔化流动，副标题扭曲悬浮，辅助文字与网格叠加"
+];
+
+function generate(){
+  let title=document.getElementById("title").value.trim();
+  let subtitle=document.getElementById("subtitle").value.trim();
+  let type=document.getElementById("type").value.trim();
+  if(!title){alert("请输入海报主题 / 产品名称");return;}
+  let container=document.getElementById("results");
+  container.innerHTML="";
+  
+  for(let i=1;i<=20;i++){
+    let assistList=[];
+    let assistCount=Math.floor(Math.random()*3)+1; // 每组1~3个辅助文字
+    for(let j=0;j<assistCount;j++){assistList.push(rand(assistTexts));}
+    
+    let visual=rand(visualElements);
+    let layout=rand(layoutStyles);
+    
+    let text=`主标题：${title}
+副标题：${subtitle || "酸性风格派对"}
+海报类型：${type || "酸液幻觉风格"}
+辅助文字：${assistList.join("，")}
+核心视觉元素：${visual}
+文字布局：${layout}
+风格：酸性风格海报，迷幻眩惑、金属流动、镭射炫彩、液态美学、复古未来感、高冲击力视觉、亚文化基因、整体充满迷幻电子氛围与反叛精神。`;
+    
+    let card=document.createElement("div");
+    card.className="promptCard";
+    card.innerHTML=`
+      <div class="promptTitle">提示词 #${i}</div>
+      <div class="promptText">${text}</div>
+      <button class="copyBtn">复制提示词</button>
+    `;
+    let btn=card.querySelector("button");
+    btn.onclick=function(){
+      navigator.clipboard.writeText(text);
+      btn.innerText="已复制";
+      btn.classList.add("copied");
+      setTimeout(()=>{
+        btn.innerText="复制提示词";
+        btn.classList.remove("copied");
+      },3000);
+    };
+    container.appendChild(card);
+  }
+}
+</script>
+</body>
+</html>
